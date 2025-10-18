@@ -1,25 +1,35 @@
 import graphene
 from graphene_django import DjangoObjectType
+from graphene_django.filter import DjangoFilterConnectionField
 from django.core.exceptions import ValidationError
 from django.db import transaction
 from .models import Customer, Product, Order
+from .filters import CustomerFilter, ProductFilter, OrderFilter
 
 class CustomerType(DjangoObjectType):
     class Meta:
         model = Customer
-        fields = ("id", "name", "email", "phone")
+        fields = ("id", "name", "email", "phone", "created_at")
+        interfaces = (graphene.relay.Node,)
 
 class ProductType(DjangoObjectType):
     class Meta:
         model = Product
         fields = ("id", "name", "price", "stock")
+        interfaces = (graphene.relay.Node,)
 
 class OrderType(DjangoObjectType):
     class Meta:
         model = Order
         fields = ("id", "customer", "products", "order_date", "total_amount")
+        interfaces = (graphene.relay.Node,)
 
 class Query(graphene.ObjectType):
+    all_customers = DjangoFilterConnectionField(CustomerType, filterset_class=CustomerFilter, order_by=graphene.List(graphene.String))
+    all_products = DjangoFilterConnectionField(ProductType, filterset_class=ProductFilter, order_by=graphene.List(graphene.String))
+    all_orders = DjangoFilterConnectionField(OrderType, filterset_class=OrderFilter, order_by=graphene.List(graphene.String))
+
+    # Keep the old ones for backward compatibility or remove if not needed
     customers = graphene.List(CustomerType)
     products = graphene.List(ProductType)
     orders = graphene.List(OrderType)

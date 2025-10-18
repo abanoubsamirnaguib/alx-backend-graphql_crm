@@ -14,6 +14,7 @@ class Customer(models.Model):
             message="Phone number must be in format +1234567890 or 123-456-7890"
         )
     ])
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
@@ -39,10 +40,11 @@ class Order(models.Model):
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def save(self, *args, **kwargs):
-        # Calculate total_amount as sum of product prices
-        if self.pk is None:  # Only on creation
-            self.total_amount = sum(product.price for product in self.products.all())
         super().save(*args, **kwargs)
+        # Calculate total_amount as sum of product prices after saving
+        if self.pk:
+            self.total_amount = sum(product.price for product in self.products.all())
+            super().save(update_fields=['total_amount'])
 
     def __str__(self):
         return f"Order {self.id} by {self.customer.name}"

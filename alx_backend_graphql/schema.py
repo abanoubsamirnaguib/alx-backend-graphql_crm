@@ -6,4 +6,4 @@ class Query(CRMQuery, graphene.ObjectType):
     hi = graphene.String(default_value="hi, GraphQL!")
     pass
 
-schema = graphene.Schema(query=Query, mutation=Mutation)
+schema = graphene.Schema(query=Query, mutation=CRMMutation)
