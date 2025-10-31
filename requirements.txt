@@ -1,0 +1,11 @@
+asgiref==3.8.1
+Django==5.2.7
+django-crontab==0.7.1
+gql==3.5.0
+graphene==3.3
+graphene-django==3.2.0
+graphql-core==3.2.3
+graphql-relay==3.2.0
+requests==2.31.0
+sqlparse==0.5.1
+tzdata==2024.1
