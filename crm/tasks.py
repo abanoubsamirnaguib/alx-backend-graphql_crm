@@ -2,6 +2,8 @@ from celery import shared_task
 from django.utils import timezone
 from decimal import Decimal
 import os
+from datetime import datetime
+import requests
 
 import graphene
 from graphene.test import Client
@@ -43,7 +45,7 @@ def generate_crm_report():
             total_revenue += Decimal(str(val))
 
     # صيغة الوقت المطلوبة
-    ts = timezone.now().strftime('%Y-%m-%d %H:%M:%S')
+    ts = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     line = f'{ts} - Report: {total_customers} customers, {total_orders} orders, {total_revenue} revenue\n'
 
     # تأكد أن المجلد موجود
